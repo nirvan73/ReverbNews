@@ -9,7 +9,7 @@
 
 ---
 
-## ✨ Features
+## Features
 
 - 🔍 **Gemini-powered Smart Search**: Search news using natural queries like _"latest tech news in India"_.
 - 📰 **Top Headlines**: Stay up-to-date with category-wise breaking news.
@@ -22,7 +22,7 @@
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 | Technology / Library       | Description |
 |----------------------------|-------------|
@@ -39,7 +39,7 @@
 
 ---
 
-## 🤖 AI-Powered Smart Search
+## AI-Powered Smart Search
 
 Using the [Gemini API](https://deepmind.google/technologies/gemini/), users can type natural language queries like:
 
@@ -49,7 +49,7 @@ Gemini intelligently processes the input and transforms it into optimized search
 
 ---
 
-## 🎬 Demo Video
+## Demo Video
 
 <a href="https://www.youtube.com/watch?v=IWVVz1S2bdE">
   <img src="https://github.com/user-attachments/assets/2ff569c1-2811-4c5d-9eef-554db389a321" style="width:100%;" alt="Watch Demo"/>
@@ -57,16 +57,17 @@ Gemini intelligently processes the input and transforms it into optimized search
 
 ---
 
-## 🚀 Setup
+## Setup
 
 Setup and run ReverbNews app on your local machine by following these steps:-
 
-1. **Clone the repository**:
+#### 1. **Clone the repository**:
 
    ```bash
    git clone https://github.com/nirvan73/ReverbNews.git
+   ```
 
-2. Open the Project in [Android Studio](https://developer.android.com/studio)
+#### 2. Open the Project in [Android Studio](https://developer.android.com/studio)
 
 - Launch **Android Studio**.
 - Go to **File > Open**.
@@ -74,9 +75,7 @@ Setup and run ReverbNews app on your local machine by following these steps:-
 - Click **OK** to open the project.
 - Let **Gradle** sync and finish building the project.
 
-3. Add API Keys
-
-To enable news search and AI features:
+#### 3. Add API Keys to enable news search and AI features:
 
 - Get your **GNews API Key** from [GNews](https://gnews.io).
 - Get your **Gemini API Key** from [Google Gemini](https://makersuite.google.com/app).
@@ -89,7 +88,7 @@ GEMINI_API_KEY=your_gemini_api_key
 - Build and run the project in your Android Device locally or on emulator.
 ---
 
-## 📝 License
+## License
 
 This project is licensed under the [MIT License](LICENSE) – see the LICENSE file for details.
 
