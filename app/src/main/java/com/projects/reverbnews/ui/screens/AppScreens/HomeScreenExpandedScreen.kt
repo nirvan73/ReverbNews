@@ -214,8 +214,8 @@ fun HomeScreenExpandedScreen(
                                 ) {
                                     Box(modifier = Modifier.weight(1f)) {
                                         LikedArticleScreen(
-                                            uiState = savedArticleViewModel.uiState,
-                                            newsUiState = savedArticleViewModel.newsUiState,
+                                            uiState = likedArticleViewModel.uiState,
+                                            newsUiState = likedArticleViewModel.newsUiState,
                                             onArticleClicked = { article ->
                                                 selectedArticle.value = article
                                             },
