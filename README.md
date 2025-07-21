@@ -66,7 +66,7 @@ Setup and run ReverbNews app on your local machine by following these steps:-
    ```bash
    git clone https://github.com/nirvan73/ReverbNews.git
 
-### 2. Open the Project in [Android Studio](https://developer.android.com/studio)
+2. Open the Project in [Android Studio](https://developer.android.com/studio)
 
 - Launch **Android Studio**.
 - Go to **File > Open**.
@@ -74,7 +74,7 @@ Setup and run ReverbNews app on your local machine by following these steps:-
 - Click **OK** to open the project.
 - Let **Gradle** sync and finish building the project.
 
-### 3. Add API Keys
+3. Add API Keys
 
 To enable news search and AI features:
 
