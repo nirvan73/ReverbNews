@@ -35,7 +35,6 @@ import com.projects.reverbnews.module.Article
 import com.projects.reverbnews.module.NewsUiState
 import com.projects.reverbnews.ui.components.NewsPreviewCard
 import com.projects.reverbnews.ui.screens.home.HomeScreenUiState
-import com.projects.reverbnews.ui.uiStateFunctions.ErrorScreen
 import com.projects.reverbnews.ui.uiStateFunctions.LoadingScreen
 import kotlinx.coroutines.flow.StateFlow
 
@@ -43,11 +42,10 @@ import kotlinx.coroutines.flow.StateFlow
 fun SavedArticleScreen(
     uiState: StateFlow<HomeScreenUiState>,
     newsUiState: NewsUiState,
-    retryAction: () -> Unit,
-    onUnbookmarkArticle:(Article)->Unit,
+    onUnbookmarkArticle: (Article) -> Unit,
     onLikeArticle: (Article) -> Unit,
     onDislikeArticle: (Article) -> Unit,
-    onArticleClicked:(Article)->Unit,
+    onArticleClicked: (Article) -> Unit,
     contentPadding: PaddingValues = PaddingValues(0.dp)
 ) {
     when (newsUiState) {
@@ -62,12 +60,20 @@ fun SavedArticleScreen(
             onDislikeArticle = onDislikeArticle,
         )
 
-        else -> ErrorScreen(
-            errorCode = null,
-            retryAction = {
-                retryAction()
+        is NewsUiState.Error -> {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = "Something went wrong while loading saved articles.",
+                    style = MaterialTheme.typography.titleMedium.copy(
+                        color = MaterialTheme.colorScheme.onBackground,
+                        textAlign = TextAlign.Center
+                    )
+                )
             }
-        )
+        }
     }
 
 }
@@ -77,8 +83,8 @@ fun SavedArticlesList(
     uiState: StateFlow<HomeScreenUiState>,
     articlesList: List<Article>,
     modifier: Modifier = Modifier,
-    onArticleClicked:(Article)->Unit,
-    onUnbookmarkArticle:(Article)->Unit,
+    onArticleClicked: (Article) -> Unit,
+    onUnbookmarkArticle: (Article) -> Unit,
     onLikeArticle: (Article) -> Unit,
     onDislikeArticle: (Article) -> Unit,
     contentPadding: PaddingValues = PaddingValues(0.dp)
@@ -108,7 +114,7 @@ fun SavedArticlesList(
                 modifier = modifier,
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                items(articlesList, key = { it.url ?: it.title }) { article ->
+                items(articlesList, key = { it.url }) { article ->
                     NewsPreviewCard(
                         previewData = article,
                         onArticleClicked = { onArticleClicked(article) },

@@ -14,6 +14,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -38,6 +39,7 @@ fun FavouriteScreenNormalScreen(
     windowSize: WindowWidthSizeClass,
 ) {
     val likedArticleViewModel: LikedArticleViewModel = hiltViewModel()
+    val newsUiState = likedArticleViewModel.newsUiState.collectAsState().value
     val selectedArticle = remember { mutableStateOf<Article?>(null) }
     val pagerState = rememberPagerState(initialPage = 0, pageCount = { 2 })
     val coroutineScope = rememberCoroutineScope()
@@ -67,13 +69,13 @@ fun FavouriteScreenNormalScreen(
             userScrollEnabled = false,
             modifier = Modifier
                 .fillMaxSize()
-                .padding(it)
         ) { page ->
             when (page) {
                 0 -> {
                     Column(
                         modifier = Modifier
-                            .fillMaxSize(),
+                            .fillMaxSize()
+                            .padding(it),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Spacer(modifier = Modifier.padding(10.dp))
@@ -92,8 +94,7 @@ fun FavouriteScreenNormalScreen(
                             color = MaterialTheme.colorScheme.background
                         ) {
                             LikedArticleScreen(
-                                newsUiState = likedArticleViewModel.newsUiState,
-                                retryAction = { likedArticleViewModel.getArticles() },
+                                newsUiState = newsUiState,
                                 onArticleClicked = {
                                     selectedArticle.value = it
                                     coroutineScope.launch {

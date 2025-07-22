@@ -1,14 +1,12 @@
 package com.projects.reverbnews.ui.screens.viewModels
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.projects.reverbnews.module.Article
 import com.projects.reverbnews.module.NewsData
 import com.projects.reverbnews.module.NewsUiState
 import com.projects.reverbnews.module.likedArticleDao.LikedArticleDao
+import com.projects.reverbnews.module.likedArticleDao.LikedArticlesEntity
 import com.projects.reverbnews.module.mappers.toArticleLiked
 import com.projects.reverbnews.module.mappers.toLikedEntity
 import com.projects.reverbnews.module.mappers.toSavedEntity
@@ -17,10 +15,12 @@ import com.projects.reverbnews.ui.screens.home.HomeScreenUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -32,15 +32,25 @@ class LikedArticleViewModel @Inject constructor(
     private val likedArticleDao: LikedArticleDao
 ) : ViewModel() {
 
-    var newsUiState: NewsUiState by mutableStateOf(NewsUiState.Loading)
-        private set
+    val newsUiState: StateFlow<NewsUiState> = likedArticleDao.getLikedArticlesOrderedBySavedAt()
+        .map<List<LikedArticlesEntity>, NewsUiState> {entity->
+            val articles = entity.map { it.toArticleLiked() }
+            NewsUiState.Success(
+                article = NewsData(
+                    totalArticles = articles.size,
+                    articles = articles
+                )
+            )
+        }
+        .catch { emit(NewsUiState.Error(null)) }
+        .stateIn(
+            scope = viewModelScope,
+            started = SharingStarted.WhileSubscribed(5000),
+            initialValue = NewsUiState.Loading
+        )
 
     private val _uiState = MutableStateFlow(HomeScreenUiState())
     val uiState: StateFlow<HomeScreenUiState> = _uiState.asStateFlow()
-
-    init {
-        getArticles()
-    }
 
     fun likeArticle(article: Article) {
         viewModelScope.launch {
@@ -108,28 +118,6 @@ class LikedArticleViewModel @Inject constructor(
                     isRemoved = false
                 )
             }
-        }
-    }
-
-    fun getArticles() {
-        newsUiState = NewsUiState.Loading
-        viewModelScope.launch {
-            likedArticleDao.getLikedArticlesOrderedBySavedAt()
-                .map { entity ->
-                    val articles = entity.map { it.toArticleLiked() }
-                    NewsUiState.Success(
-                        article = NewsData(
-                            totalArticles = articles.size,
-                            articles = articles
-                        )
-                    )
-                }
-                .catch {
-                    newsUiState = NewsUiState.Error(null)
-                }
-                .collect { state ->
-                    newsUiState = state
-                }
         }
     }
 

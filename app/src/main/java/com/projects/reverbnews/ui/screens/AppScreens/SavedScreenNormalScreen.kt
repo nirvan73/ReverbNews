@@ -14,6 +14,7 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.windowsizeclass.WindowWidthSizeClass
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -38,6 +39,7 @@ fun SavedScreenNormalScreen(
     windowSize: WindowWidthSizeClass,
 ) {
     val savedArticleViewModel: SavedArticleViewModel = hiltViewModel()
+    val newsUiState = savedArticleViewModel.newsUiState.collectAsState().value
     val selectedArticle = remember { mutableStateOf<Article?>(null) }
     val pagerState = rememberPagerState(initialPage = 0, pageCount = { 2 })
     val coroutineScope = rememberCoroutineScope()
@@ -67,13 +69,13 @@ fun SavedScreenNormalScreen(
             userScrollEnabled = false,
             modifier = Modifier
                 .fillMaxSize()
-                .padding(it)
         ) { page ->
             when (page) {
                 0 -> {
                     Column(
                         modifier = Modifier
-                            .fillMaxSize(),
+                            .fillMaxSize()
+                            .padding(it),
                         horizontalAlignment = Alignment.CenterHorizontally
                     ) {
                         Spacer(modifier = Modifier.padding(10.dp))
@@ -92,8 +94,7 @@ fun SavedScreenNormalScreen(
                             color = MaterialTheme.colorScheme.background
                         ) {
                             SavedArticleScreen(
-                                newsUiState = savedArticleViewModel.newsUiState,
-                                retryAction = { savedArticleViewModel.getArticles() },
+                                newsUiState = newsUiState,
                                 onArticleClicked = {
                                     selectedArticle.value = it
                                     coroutineScope.launch {
@@ -110,9 +111,9 @@ fun SavedScreenNormalScreen(
                 }
 
                 1 -> {
-                    if (selectedArticle.value != null) {
+                    selectedArticle.value?.let { article ->
                         ArticleDetailScreen(
-                            articleData = selectedArticle.value!!,
+                            articleData = article,
                             onBackClicked = {
                                 coroutineScope.launch {
                                     delay(100)
@@ -120,16 +121,14 @@ fun SavedScreenNormalScreen(
                                 }
                             },
                         )
-                    } else {
-                        Box(
-                            modifier = Modifier.fillMaxSize(),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Text(
-                                "Select an article to view details",
-                                style = MaterialTheme.typography.bodyLarge
-                            )
-                        }
+                    } ?: Box(
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            "Select an article to view details",
+                            style = MaterialTheme.typography.bodyLarge
+                        )
                     }
                 }
             }

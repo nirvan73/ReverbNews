@@ -1,6 +1,5 @@
 package com.projects.reverbnews.ui.screens.AppScreens
 
-
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.pager.HorizontalPager
@@ -36,6 +35,8 @@ fun HomeScreenExpandedScreen(
     val homeScreenViewModel: NewsViewModel = hiltViewModel()
     val savedArticleViewModel: SavedArticleViewModel = hiltViewModel()
     val likedArticleViewModel: LikedArticleViewModel = hiltViewModel()
+    val savedArticleNewsUiState = savedArticleViewModel.newsUiState.collectAsState().value
+    val likedArticleNewsUiState = likedArticleViewModel.newsUiState.collectAsState().value
     val uiState = homeScreenViewModel.queryUiState.collectAsState().value
     val selectedArticle = remember { mutableStateOf<Article?>(null) }
     val query = remember { mutableStateOf("") }
@@ -172,14 +173,13 @@ fun HomeScreenExpandedScreen(
                                     Box(modifier = Modifier.weight(1f)) {
                                         SavedArticleScreen(
                                             uiState = savedArticleViewModel.uiState,
-                                            newsUiState = savedArticleViewModel.newsUiState,
+                                            newsUiState = savedArticleNewsUiState,
                                             onArticleClicked = { article ->
                                                 selectedArticle.value = article
                                             },
                                             onUnbookmarkArticle = savedArticleViewModel::unbookmarkArticle,
                                             onLikeArticle = savedArticleViewModel::likeArticle,
                                             onDislikeArticle = savedArticleViewModel::dislikeArticle,
-                                            retryAction = savedArticleViewModel::getArticles,
                                         )
                                     }
                                 }
@@ -215,14 +215,13 @@ fun HomeScreenExpandedScreen(
                                     Box(modifier = Modifier.weight(1f)) {
                                         LikedArticleScreen(
                                             uiState = likedArticleViewModel.uiState,
-                                            newsUiState = likedArticleViewModel.newsUiState,
+                                            newsUiState = likedArticleNewsUiState,
                                             onArticleClicked = { article ->
                                                 selectedArticle.value = article
                                             },
                                             onUnbookmarkArticle = likedArticleViewModel::unbookmarkArticle,
                                             onLikeArticle = likedArticleViewModel::likeArticle,
                                             onDislikeArticle = likedArticleViewModel::dislikeArticle,
-                                            retryAction = likedArticleViewModel::getArticles,
                                             bookmarkArticle = likedArticleViewModel::bookmarkArticle
                                         )
                                     }

@@ -34,7 +34,6 @@ import com.projects.reverbnews.module.Article
 import com.projects.reverbnews.module.NewsUiState
 import com.projects.reverbnews.ui.components.NewsPreviewCard
 import com.projects.reverbnews.ui.screens.home.HomeScreenUiState
-import com.projects.reverbnews.ui.uiStateFunctions.ErrorScreen
 import com.projects.reverbnews.ui.uiStateFunctions.LoadingScreen
 import kotlinx.coroutines.flow.StateFlow
 
@@ -42,7 +41,6 @@ import kotlinx.coroutines.flow.StateFlow
 fun LikedArticleScreen(
     uiState: StateFlow<HomeScreenUiState>,
     newsUiState: NewsUiState,
-    retryAction: () -> Unit,
     bookmarkArticle: (Article) -> Unit,
     onUnbookmarkArticle: (Article) -> Unit,
     onLikeArticle: (Article) -> Unit,
@@ -63,12 +61,20 @@ fun LikedArticleScreen(
             bookmarkArticle = bookmarkArticle,
         )
 
-        else -> ErrorScreen(
-            errorCode = null,
-            retryAction = {
-                retryAction()
+        is NewsUiState.Error -> {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    text = "Something went wrong while loading liked articles.",
+                    style = MaterialTheme.typography.titleMedium.copy(
+                        color = MaterialTheme.colorScheme.onBackground,
+                        textAlign = TextAlign.Center
+                    )
+                )
             }
-        )
+        }
     }
 
 }
@@ -110,7 +116,7 @@ fun LikedArticlesList(
                 modifier = modifier,
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
-                items(articlesList, key = { it.url ?: it.title }) { article ->
+                items(articlesList, key = { it.url  }) { article ->
                     NewsPreviewCard(
                         previewData = article,
                         onArticleClicked = { onArticleClicked(article) },
