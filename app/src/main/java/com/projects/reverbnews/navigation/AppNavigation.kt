@@ -52,18 +52,18 @@ fun AppNavigationScreen(
                     else -> false
                 }
                 if (forward) {
-                    slideInHorizontally(animationSpec = tween(800)) { it } + fadeIn(
-                        animationSpec = tween(durationMillis = 1500)
+                    slideInHorizontally(animationSpec = tween(600)) { it } + fadeIn(
+                        animationSpec = tween(durationMillis = 1200)
                     ) togetherWith
-                            slideOutHorizontally(animationSpec = tween(800)) { -it } + fadeOut(
-                        animationSpec = tween(durationMillis = 1500)
+                            slideOutHorizontally(animationSpec = tween(600)) { -it } + fadeOut(
+                        animationSpec = tween(durationMillis = 1200)
                     )
                 } else {
-                    slideInHorizontally(animationSpec = tween(800)) { -it } + fadeIn(
-                        animationSpec = tween(durationMillis = 1500)
+                    slideInHorizontally(animationSpec = tween(600)) { -it } + fadeIn(
+                        animationSpec = tween(durationMillis = 1200)
                     ) togetherWith
-                            slideOutHorizontally(animationSpec = tween(800)) { it } + fadeOut(
-                        animationSpec = tween(durationMillis = 1500)
+                            slideOutHorizontally(animationSpec = tween(600)) { it } + fadeOut(
+                        animationSpec = tween(durationMillis = 1200)
                     )
                 }
             },
